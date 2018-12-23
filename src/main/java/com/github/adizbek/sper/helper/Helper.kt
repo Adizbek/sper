@@ -2,6 +2,7 @@ package com.github.adizbek.sper.helper
 
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -23,7 +24,6 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import com.blankj.utilcode.util.ConvertUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.mikepenz.fastadapter.FastAdapter
@@ -199,13 +199,18 @@ object Helper {
     }
 
     fun setupToolbar(context: AppCompatActivity, v: View, title: Int): Toolbar {
+        return setupToolbar(context, v, context.getString(title))
+    }
+
+    fun setupToolbar(context: AppCompatActivity, v: View, title: String): Toolbar {
         val toolbar = v.findViewById<Toolbar>(R.id.toolbar)
         context.setSupportActionBar(toolbar)
-        toolbar.setTitle(title)
+        toolbar.title = title
 
         val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-                context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
 
         drawer.addDrawerListener(toggle)
         toggle.syncState()
@@ -258,41 +263,62 @@ object Helper {
 
         }
 
-        fun toolbar(activity: AppCompatActivity, toolbar: Toolbar, @StringRes title: Int) {
+
+        fun toolbar(activity: AppCompatActivity, toolbar: Toolbar, @StringRes title: Int = 0) {
+            toolbar(activity, toolbar, if (title == 0) "" else activity.getString(title))
+        }
+
+
+        fun toolbar(activity: AppCompatActivity, toolbar: Toolbar, title: String?) {
             activity.setSupportActionBar(toolbar)
-            toolbar.setTitle(title)
+
+            toolbar.title = title
 
             val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
-                    activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+                activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            )
 
             drawer.addDrawerListener(toggle)
             toggle.syncState()
+
         }
 
-        fun setupList(list: RecyclerView, adapter: FastAdapter<*>, activity: Activity, addDecorator: Boolean = true) {
+        fun setupList(
+            list: RecyclerView,
+            adapter: FastAdapter<*>,
+            context: Context,
+            addDecorator: Boolean = true,
+            decorPadding: Int = 0
+        ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
-            list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             list.itemAnimator = DefaultItemAnimator()
 
             list.adapter = adapter
 
-            if (addDecorator)
-                addDecorater(list)
+
+            if (list.itemDecorationCount == 0 && addDecorator)
+                addDecorater(list, decorPadding)
         }
 
-        fun addDecorater(list: RecyclerView) {
+        fun addDecorater(list: RecyclerView, decorPadding: Int) {
             val context = list.context
             val attrs = intArrayOf(android.R.attr.listDivider)
             val a = context.obtainStyledAttributes(attrs);
             val divider = a.getDrawable(0);
-            val inset = ConvertUtils.dp2px(10f)
+            val inset = decorPadding
             val insetDivider = InsetDrawable(divider, inset, 0, inset, 0);
             a.recycle()
 
             val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
-                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
                     val position = parent.getChildAdapterPosition(view);
                     // hide the divider for the last child
                     if (position == parent.adapter!!.itemCount - 1) {
@@ -305,6 +331,7 @@ object Helper {
             itemDecoration.setDrawable(insetDivider)
             list.addItemDecoration(itemDecoration)
         }
+
     }
 
 
@@ -333,9 +360,9 @@ object Helper {
             val builder = AlertDialog.Builder(activity)
 
             builder.setTitle(title)
-                    .setMessage(text)
-                    .setPositiveButton(R.string.ok, null)
-                    .show()
+                .setMessage(text)
+                .setPositiveButton(R.string.ok, null)
+                .show()
 
         }
     }
@@ -442,7 +469,8 @@ object Helper {
         }
 
         fun calculateInSampleSize(
-                options: BitmapFactory.Options, maxSize: Int): Int {
+            options: BitmapFactory.Options, maxSize: Int
+        ): Int {
 
             // Raw height and width of image
             val height = options.outHeight

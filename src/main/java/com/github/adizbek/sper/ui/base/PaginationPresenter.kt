@@ -12,8 +12,8 @@ import net.grandcentrix.thirtyinch.TiPresenter
 
 
 abstract class PaginationPresenter<V : PaginationView, ITEM : AbstractItem<*, *>> : TiPresenter<V>() {
-    public val itemAdapter = ItemAdapter<ITEM>()
-    public val fastAdapter = FastAdapter.with<AbstractItem<*, *>, ItemAdapter<*>>(itemAdapter)
+    val itemAdapter = ItemAdapter<ITEM>()
+    val fastAdapter = FastAdapter.with<AbstractItem<*, *>, ItemAdapter<*>>(itemAdapter)
 
     protected abstract fun getCall(page: Int): Observable<BaseResponse<ITEM>>
 
