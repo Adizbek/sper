@@ -108,15 +108,7 @@ object Helper {
         sym.groupingSeparator = ' '
         val formatter = DecimalFormat("#,###.##", sym)
 
-        return String.format(BaseApplication.c.getString(R.string.currency_sum), formatter.format(`in`.toDouble()))
-    }
-
-    fun currencyFFormatter(`in`: Float): String {
-        val sym = DecimalFormatSymbols.getInstance()
-        sym.groupingSeparator = ' '
-        val formatter = DecimalFormat("#,###.##", sym)
-
-        return String.format(BaseApplication.c.getString(R.string.currency_sum), formatter.format(`in`.toDouble()))
+        return formatter.format(`in`.toDouble())
     }
 
 
@@ -148,7 +140,7 @@ object Helper {
         bindHtml(tv, tv.context.resources.getString(res))
     }
 
-    fun getLocale(): Locale? {
+    private fun getLocale(): Locale? {
         if (locale == null)
             loadSavedLang()
 

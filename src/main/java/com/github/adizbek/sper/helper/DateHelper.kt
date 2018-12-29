@@ -4,10 +4,14 @@ import android.text.format.DateFormat
 import com.github.adizbek.sper.Sper
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 object DateHelper {
     @JvmStatic
-    var defaultDateFormat = "yyyy-MM-dd HH:mm:ss"
+    val fullDateFormat = "yyyy-MM-dd HH:mm:ss"
+
+    @JvmStatic
+    var defaultDateFormat = fullDateFormat
 
     fun dateFormatter(myCalendar: Calendar): String {
         return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(myCalendar.time)
@@ -29,6 +33,10 @@ object DateHelper {
 
     }
 
+    fun convertStrDate(date: String, toPattern: String, fromPattern: String = defaultDateFormat): String {
+        return date2Custom(str2Date(date, fromPattern), toPattern)
+    }
+
     fun date2MonthAndDay(date: Date): String {
         return DateFormat.format("dd-MMM", date) as String
     }
@@ -38,7 +46,7 @@ object DateHelper {
     }
 
     fun date2MonthAndDayAndHour(date: Date): String {
-        val sdf = SimpleDateFormat("dd-MMM, HH:mm", Helper.getLocale()!!)
+        val sdf = SimpleDateFormat("dd-MMM, HH:mm", Sper.getInstance().locale)
         return sdf.format(date)
     }
 
@@ -48,13 +56,13 @@ object DateHelper {
 
 
     fun date2Custom(date: Date, pattern: String): String {
-        val sdf = SimpleDateFormat(pattern, Helper.getLocale()!!)
+        val sdf = SimpleDateFormat(pattern, Sper.getInstance().locale)
         return sdf.format(date)
     }
 
 
     fun dateToFullStringFormat(calendar: Date): String {
-        return DateFormat.format("yyyy-MM-dd HH:mm:ss", calendar.time).toString()
+        return DateFormat.format(fullDateFormat, calendar.time).toString()
     }
 
     @JvmStatic
@@ -70,5 +78,17 @@ fun Long.toDateStr(pattern: String = DateHelper.defaultDateFormat): String {
 }
 
 fun String.toTimestamp(pattern: String = DateHelper.defaultDateFormat): Long {
-    return DateHelper.str2Date(this, pattern).time
+    return try {
+        DateHelper.str2Date(this, pattern).time
+    } catch (e: java.lang.Exception) {
+        0L
+    }
+}
+
+fun String.conv2Date(toPattern: String, fromPattern: String = DateHelper.defaultDateFormat): String {
+    return DateHelper.convertStrDate(this, toPattern, fromPattern)
+}
+
+fun String.dateFull(fromPattern: String = DateHelper.defaultDateFormat): String {
+    return this.conv2Date(DateHelper.fullDateFormat, fromPattern)
 }
