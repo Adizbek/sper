@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.github.adizbek.sper.helper.login.ILogin;
 
+import java.util.HashMap;
+
 public class LoginHelper {
     private static LoginHelper instance;
     private SharedPreferences preferences;
+    private HashMap<String, String> cache;
     private ILogin loginHandler;
 
     static void init(Context context, ILogin loginHandler) {
@@ -16,15 +19,21 @@ public class LoginHelper {
     private LoginHelper(Context context, ILogin loginHandler) {
         preferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
         this.loginHandler = loginHandler;
+        cache = new HashMap<>();
     }
 
     public LoginHelper write(String key, String value) {
         preferences.edit().putString(key, value).apply();
+        cache.put(key, value);
 
         return this;
     }
 
     public String read(String key) {
+        if (cache.keySet().contains(key)) {
+            return cache.get(key);
+        }
+
         return preferences.getString(key, "");
     }
 
@@ -33,6 +42,7 @@ public class LoginHelper {
 
         for (String key : keys) {
             editor.remove(key);
+            cache.remove(key);
         }
 
         editor.apply();
@@ -40,6 +50,7 @@ public class LoginHelper {
 
     public static void login(String... params) {
         instance.loginHandler.login(instance, params);
+        System.out.println("Saved credentials");
     }
 
     public static void logout() {
@@ -47,6 +58,13 @@ public class LoginHelper {
     }
 
     public static boolean isLoggedIn() {
-        return instance.loginHandler.isLoggedIn(instance);
+        boolean status = instance.loginHandler.isLoggedIn(instance);
+        System.out.println(String.format("Login status %s", status));
+
+        return status;
+    }
+
+    public static String getCredintals(String key) {
+        return instance.read(key);
     }
 }

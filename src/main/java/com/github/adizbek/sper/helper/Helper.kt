@@ -26,6 +26,7 @@ import android.view.View
 import android.widget.TextView
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
+import com.github.adizbek.sper.Sper
 import com.mikepenz.fastadapter.FastAdapter
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -47,7 +48,10 @@ object Helper {
     private var locale: Locale? = null
 
     val lang: String
-        get() = PreferenceManager.getDefaultSharedPreferences(BaseApplication.c).getString("language", defaultLang)
+        get() = PreferenceManager.getDefaultSharedPreferences(Sper.getContext()).getString(
+            "language",
+            defaultLang
+        )
 
     //    public static String urlImage(String src) {
     //        return urlImage(src, Application.getHost());
@@ -115,53 +119,6 @@ object Helper {
         return String.format(BaseApplication.c.getString(R.string.currency_sum), formatter.format(`in`.toDouble()))
     }
 
-    fun dateFormatter(myCalendar: Calendar): String {
-        return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(myCalendar.time)
-    }
-
-    @JvmOverloads
-    fun str2Date(date: String, pattern: String = "yyyy-MM-dd HH:mm:ss"): Date {
-        val format = SimpleDateFormat(pattern, getLocale()!!)
-
-        try {
-            val d = format.parse(date)
-            println(date)
-
-            return d
-        } catch (e: Exception) {
-            println("Parse error ")
-            return Date()
-        }
-
-    }
-
-    fun date2MonthAndDay(date: Date): String {
-        return DateFormat.format("dd-MMM", date) as String
-    }
-
-    fun date2MonthAndDay(string: String): String {
-        return date2MonthAndDay(str2Date(string))
-    }
-
-    fun date2MonthAndDayAndHour(date: Date): String {
-        val sdf = SimpleDateFormat("dd-MMM, HH:mm", getLocale()!!)
-        return sdf.format(date)
-    }
-
-    fun dateToFullStringFormat(calendar: Calendar): String {
-        return dateToFullStringFormat(calendar.time)
-    }
-
-
-    fun date2Custom(date: Date, pattern: String): String {
-        val sdf = SimpleDateFormat(pattern, getLocale()!!)
-        return sdf.format(date)
-    }
-
-
-    fun dateToFullStringFormat(calendar: Date): String {
-        return DateFormat.format("yyyy-MM-dd HH:mm:ss", calendar.time).toString()
-    }
 
     fun loadSavedLang() {
         changeLocale(lang)
