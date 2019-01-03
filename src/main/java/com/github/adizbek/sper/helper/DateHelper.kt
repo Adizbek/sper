@@ -92,3 +92,27 @@ fun String.conv2Date(toPattern: String, fromPattern: String = DateHelper.default
 fun String.dateFull(fromPattern: String = DateHelper.defaultDateFormat): String {
     return this.conv2Date(DateHelper.fullDateFormat, fromPattern)
 }
+
+fun Calendar.setMonthStart() {
+    this.set(this.get(Calendar.YEAR), this.get(Calendar.MONTH), 1, 0, 0, 0)
+    this.set(Calendar.MILLISECOND, 0)
+}
+
+fun Calendar.setMonthStartC(): Calendar {
+    return (this.clone() as Calendar).apply {
+        setMonthStart()
+    }
+}
+
+fun Calendar.setMonthEnd() {
+    this.set(this.get(Calendar.YEAR), this.get(Calendar.MONTH), 1, 0, 0, 0)
+    this.set(Calendar.MILLISECOND, 0)
+    this.add(Calendar.MONTH, 1)
+    this.add(Calendar.SECOND, -1)
+}
+
+fun Calendar.setMonthEndC(): Calendar {
+    return (this.clone() as Calendar).apply {
+        setMonthEnd()
+    }
+}

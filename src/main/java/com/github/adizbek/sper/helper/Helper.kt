@@ -24,6 +24,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.blankj.utilcode.util.EncryptUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
@@ -42,6 +43,11 @@ import java.util.*
 /**
  * Created by adizbek on 2/18/18.
  */
+
+
+fun String.md5(): String {
+    return EncryptUtils.encryptMD5ToString(this);
+}
 
 object Helper {
     val defaultLang = "ru"
