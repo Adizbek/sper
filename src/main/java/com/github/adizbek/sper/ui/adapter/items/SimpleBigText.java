@@ -1,6 +1,7 @@
 package com.github.adizbek.sper.ui.adapter.items;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.github.adizbek.sper.R;
@@ -25,8 +26,13 @@ public class SimpleBigText extends AbstractItem<SimpleBigText, SimpleBigText.VH>
     }
 
     @Override
+    public long getIdentifier() {
+        return id;
+    }
+
+    @Override
     public int getType() {
-        return 0;
+        return R.id.text1;
     }
 
     @Override
@@ -40,7 +46,21 @@ public class SimpleBigText extends AbstractItem<SimpleBigText, SimpleBigText.VH>
         return this;
     }
 
-    public class VH extends FastAdapter.ViewHolder<SimpleBigText> {
+    @Override
+    public void bindView(VH holder, List<Object> payloads) {
+        super.bindView(holder, payloads);
+
+        holder.text.setText(text);
+    }
+
+    @Override
+    public void unbindView(VH holder) {
+        super.unbindView(holder);
+
+        holder.text.setText(null);
+    }
+
+    public class VH extends RecyclerView.ViewHolder {
         TextView text;
 
         public VH(View v) {
@@ -49,14 +69,5 @@ public class SimpleBigText extends AbstractItem<SimpleBigText, SimpleBigText.VH>
             text = (TextView) v;
         }
 
-        @Override
-        public void bindView(SimpleBigText item, List<Object> payloads) {
-            text.setText(item.text);
-        }
-
-        @Override
-        public void unbindView(SimpleBigText item) {
-            text.setText(null);
-        }
     }
 }

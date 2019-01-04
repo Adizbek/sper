@@ -2,4 +2,5 @@
 <resources>
     <item name="drawer_layout" type="id" />
     <item name="toolbar" type="id" />
+    <!--<item name="simple_big_text_type" type="id">199</item>-->
 </resources>
