@@ -82,10 +82,14 @@ object Helper {
         floatAnimator.start()
     }
 
-    fun setupToolbarBack(context: AppCompatActivity, v: View, title: Int): Toolbar {
+    fun setupToolbarBack(context: AppCompatActivity, v: View, title: Int) {
+        setupToolbarBack(context, v, context.getString(title))
+    }
+
+    fun setupToolbarBack(context: AppCompatActivity, v: View, title: String): Toolbar {
         val toolbar = v.findViewById<Toolbar>(R.id.toolbar)
         context.setSupportActionBar(toolbar)
-        toolbar.setTitle(title)
+        toolbar.title = title
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sper</string>
     <string name="ok">Ok</string>
-    <string name="dialog_message_title">dialog_message_title</string>
+    <string name="dialog_message_title">Диққат</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
 
