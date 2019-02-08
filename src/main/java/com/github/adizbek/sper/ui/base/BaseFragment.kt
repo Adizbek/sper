@@ -1,7 +1,12 @@
 package com.github.adizbek.sper.ui.base
 
 import android.app.ProgressDialog
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
+import com.github.adizbek.sper.helper.Helper
 import net.grandcentrix.thirtyinch.TiFragment
 import net.grandcentrix.thirtyinch.TiPresenter
 import net.grandcentrix.thirtyinch.TiView
@@ -46,4 +51,31 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
         loadingView = null
     }
 
+    fun act(): AppCompatActivity {
+        return activity as AppCompatActivity
+    }
+
+    fun fm(): FragmentManager {
+        return act().supportFragmentManager
+    }
+
+    fun setToolbar(title: String, toolbar: View, back: Boolean = true) {
+        if (back)
+            Helper.setupToolbarBack(act(), toolbar, title)
+        else
+            Helper.setupToolbar(act(), toolbar, title)
+    }
+
+
+    fun setToolbar(title: Int, toolbar: View, back: Boolean = true) {
+        if (back)
+            Helper.setupToolbarBack(act(), toolbar, title)
+        else
+            Helper.setupToolbar(act(), toolbar, title)
+    }
 }
+
+fun Fragment.fm(): FragmentManager {
+    return (activity as AppCompatActivity).supportFragmentManager
+}
+

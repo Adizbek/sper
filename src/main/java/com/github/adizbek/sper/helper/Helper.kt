@@ -12,22 +12,27 @@ import android.os.Build
 import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.*
 import android.text.Html
-import android.text.format.DateFormat
+import android.text.Spannable
 import android.text.method.LinkMovementMethod
 import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.FragmentUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
+import com.github.adizbek.sper.net.PicassoImageGetter
 import com.mikepenz.fastadapter.FastAdapter
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -36,7 +41,6 @@ import java.io.File
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -55,8 +59,8 @@ object Helper {
 
     val lang: String
         get() = PreferenceManager.getDefaultSharedPreferences(Sper.getContext()).getString(
-            "language",
-            defaultLang
+                "language",
+                defaultLang
         )
 
     //    public static String urlImage(String src) {
@@ -137,13 +141,18 @@ object Helper {
     }
 
     fun bindHtml(tv: TextView, string: String) {
+        // TODO correct img loading.
+        val imageGetter = PicassoImageGetter(tv)
+        val html: Spannable
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tv.text = Html.fromHtml(string, Html.FROM_HTML_MODE_LEGACY)
+            html = Html.fromHtml(string, Html.FROM_HTML_MODE_LEGACY, imageGetter, null) as Spannable
         } else {
-            tv.text = Html.fromHtml(string)
+            html = Html.fromHtml(string, imageGetter, null) as Spannable
         }
 
         tv.movementMethod = LinkMovementMethod.getInstance()
+        tv.text = html
     }
 
     fun bindHtml(tv: TextView, @StringRes res: Int) {
@@ -168,7 +177,7 @@ object Helper {
 
         val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-            context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
 
         drawer.addDrawerListener(toggle)
@@ -209,10 +218,10 @@ object Helper {
     object UI {
         val TAG = "StarterProject:UIHelper"
 
-        fun rippleEffect(activity: Activity?, view: View) {
+        fun rippleEffect(view: View) {
             try {
                 val attrs = intArrayOf(R.attr.selectableItemBackground)
-                val typedArray = activity!!.obtainStyledAttributes(attrs)
+                val typedArray = view.context.obtainStyledAttributes(attrs)
                 val backgroundResource = typedArray.getResourceId(0, 0)
                 view.setBackgroundResource(backgroundResource)
                 typedArray.recycle()
@@ -235,7 +244,7 @@ object Helper {
 
             val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
-                activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                    activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
             )
 
             drawer.addDrawerListener(toggle)
@@ -244,11 +253,11 @@ object Helper {
         }
 
         fun setupList(
-            list: RecyclerView,
-            adapter: FastAdapter<*>,
-            context: Context,
-            addDecorator: Boolean = true,
-            decorPadding: Int = 0
+                list: RecyclerView,
+                adapter: FastAdapter<*>,
+                context: Context,
+                addDecorator: Boolean = true,
+                decorPadding: Int = 0
         ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
@@ -265,18 +274,18 @@ object Helper {
         fun addDecorater(list: RecyclerView, decorPadding: Int) {
             val context = list.context
             val attrs = intArrayOf(android.R.attr.listDivider)
-            val a = context.obtainStyledAttributes(attrs);
-            val divider = a.getDrawable(0);
-            val inset = decorPadding
+            val a = context.obtainStyledAttributes(attrs)
+            val divider = a.getDrawable(0)
+            val inset = ConvertUtils.px2dp(decorPadding.toFloat())
             val insetDivider = InsetDrawable(divider, inset, 0, inset, 0);
             a.recycle()
 
             val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
                 override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
                 ) {
                     val position = parent.getChildAdapterPosition(view);
                     // hide the divider for the last child
@@ -319,9 +328,9 @@ object Helper {
             val builder = AlertDialog.Builder(activity)
 
             builder.setTitle(title)
-                .setMessage(text)
-                .setPositiveButton(R.string.ok, null)
-                .show()
+                    .setMessage(text)
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
 
         }
     }
@@ -428,7 +437,7 @@ object Helper {
         }
 
         fun calculateInSampleSize(
-            options: BitmapFactory.Options, maxSize: Int
+                options: BitmapFactory.Options, maxSize: Int
         ): Int {
 
             // Raw height and width of image
@@ -501,6 +510,8 @@ object Helper {
 
     private class Docs
     /**
+     *
+     * Tue, 22 Jan 2019 00:00:00 +0500 =
      * @url http://www.java2s.com/Tutorial/Java/0120__Development/0190__SimpleDateFormat.htm
      * 6.12.SimpleDateFormat
      * 6.12.1.	Get Today's Date
@@ -564,3 +575,18 @@ object Helper {
      * 6.12.59.	Check if a String is a valid date
      */
 }
+
+fun TextView.bindHtml(html: String): TextView {
+    Helper.bindHtml(this, html)
+
+    return this
+}
+
+
+fun TextView.bindHtml(@StringRes html: Int): TextView {
+    Helper.bindHtml(this, html)
+
+    return this
+}
+
+

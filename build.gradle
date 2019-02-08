@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.mikepenz:fastadapter:3.2.8'
     implementation 'com.mikepenz:fastadapter-extensions:3.2.8'
     implementation 'com.mikepenz:itemanimators:1.0.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     implementation 'com.blankj:utilcode:1.20.3'
 
