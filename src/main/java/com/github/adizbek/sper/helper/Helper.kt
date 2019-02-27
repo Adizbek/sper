@@ -8,12 +8,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.drawable.InsetDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
@@ -23,12 +23,12 @@ import android.text.Html
 import android.text.Spannable
 import android.text.method.LinkMovementMethod
 import android.util.Base64
+import android.util.Base64OutputStream
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
-import com.blankj.utilcode.util.FragmentUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
@@ -39,6 +39,7 @@ import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -589,4 +590,49 @@ fun TextView.bindHtml(@StringRes html: Int): TextView {
     return this
 }
 
+fun String.stripHtml(): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY).toString()
+    } else {
+        Html.fromHtml(this).toString()
+    }
+}
 
+fun Uri.getRealPath(ctx: Context): String? {
+    var path: String?
+
+    val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
+    val cursor = ctx.contentResolver.query(this, projection, null, null, null)
+
+    if (cursor == null) {
+        path = this.path
+    } else {
+        cursor.moveToFirst()
+        val columnIndex = cursor.getColumnIndexOrThrow(projection[0])
+        path = cursor.getString(columnIndex)
+        cursor.close()
+    }
+
+    return if (path == null || path.isEmpty()) this.path else path
+}
+
+fun InputStream.toBase64(): String {
+    val buffer = byteArrayOf()
+    var bytesRead = 0
+
+    val output = ByteArrayOutputStream()
+    val output64 = Base64OutputStream(output, Base64.DEFAULT)
+
+    try {
+        while ({ bytesRead = this.read(buffer); bytesRead }() != -1) {
+            output64.write(buffer, 0, bytesRead)
+        }
+
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+
+    output64.close()
+
+    return output.toString()
+}
