@@ -27,8 +27,10 @@ import android.util.Base64OutputStream
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.blankj.subutil.util.ClipboardUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
@@ -635,4 +637,9 @@ fun InputStream.toBase64(): String {
     output64.close()
 
     return output.toString()
+}
+
+fun String.copyToClipboard() {
+    ClipboardUtils.copyText(this)
+    ToastUtils.showLong("Copied")
 }
