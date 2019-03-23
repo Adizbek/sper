@@ -78,4 +78,3 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
 fun Fragment.fm(): FragmentManager {
     return (activity as AppCompatActivity).supportFragmentManager
 }
-
