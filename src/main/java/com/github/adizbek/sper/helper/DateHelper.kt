@@ -4,7 +4,6 @@ import android.text.format.DateFormat
 import com.github.adizbek.sper.Sper
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 
 object DateHelper {
     @JvmStatic
@@ -18,8 +17,8 @@ object DateHelper {
     }
 
     @JvmOverloads
-    fun str2Date(date: String, pattern: String = defaultDateFormat): Date {
-        val format = SimpleDateFormat(pattern, Sper.getInstance().locale)
+    fun str2Date(date: String, pattern: String = defaultDateFormat, locale: Locale = Sper.getInstance().locale): Date {
+        val format = SimpleDateFormat(pattern, locale)
 
         try {
             val d = format.parse(date)
@@ -33,8 +32,8 @@ object DateHelper {
 
     }
 
-    fun convertStrDate(date: String, toPattern: String, fromPattern: String = defaultDateFormat): String {
-        return date2Custom(str2Date(date, fromPattern), toPattern)
+    fun convertStrDate(date: String, toPattern: String, fromPattern: String = defaultDateFormat, locale: Locale = Sper.getInstance().locale): String {
+        return date2Custom(str2Date(date, fromPattern, locale), toPattern)
     }
 
     fun date2MonthAndDay(date: Date): String {
@@ -85,8 +84,8 @@ fun String.toTimestamp(pattern: String = DateHelper.defaultDateFormat): Long {
     }
 }
 
-fun String.conv2Date(toPattern: String, fromPattern: String = DateHelper.defaultDateFormat): String {
-    return DateHelper.convertStrDate(this, toPattern, fromPattern)
+fun String.conv2Date(toPattern: String, fromPattern: String = DateHelper.defaultDateFormat, locale: Locale = Sper.getInstance().locale): String {
+    return DateHelper.convertStrDate(this, toPattern, fromPattern, locale)
 }
 
 fun String.dateFull(fromPattern: String = DateHelper.defaultDateFormat): String {

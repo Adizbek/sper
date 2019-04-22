@@ -1,22 +1,20 @@
 package com.github.adizbek.sper;
 
 import android.content.Context;
+
 import com.github.adizbek.sper.helper.DateHelper;
 import com.github.adizbek.sper.helper.login.BaseLoginHandler;
 import com.github.adizbek.sper.helper.login.ILogin;
-import kotlin.jvm.JvmStatic;
 
-import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 public class Sper {
-    private static WeakReference<Sper> instance;
-
+    private static Sper instance;
     private Context context;
     private Locale locale;
 
     public static Sper getInstance() {
-        return instance.get();
+        return instance;
     }
 
     public Locale getLocale() {
@@ -26,13 +24,13 @@ public class Sper {
     private Sper(Builder builder) {
         LoginHelper.init(builder.mContext, builder.loginHandler);
         DateHelper.init(builder.dateFormat);
-        instance = new WeakReference<>(this);
+        instance = this;
         this.context = builder.mContext;
         this.locale = new Locale(builder.locale);
     }
 
     public static Context getContext() {
-        return instance.get().context;
+        return instance.context;
     }
 
     public static class Builder {
