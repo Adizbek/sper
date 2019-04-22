@@ -18,7 +18,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.*
 import android.text.Html
-import android.text.format.DateFormat
 import android.text.method.LinkMovementMethod
 import android.util.Base64
 import android.util.Log
@@ -36,7 +35,6 @@ import java.io.File
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -50,6 +48,23 @@ fun String.md5(): String {
 }
 
 object Helper {
+
+    fun getUniqueID(): String {
+        val deviceID =
+            "35" + (Build.BOARD.length % 10) + (Build.BRAND.length % 10) + (Build.CPU_ABI.length % 10) + (Build.DEVICE.length % 10) + (Build.MANUFACTURER.length % 10) + (Build.MODEL.length % 10) + (Build.PRODUCT.length % 10)
+
+        var serial: String
+
+        try {
+            serial = android.os.Build::class.java.getField("SERIAL").get(null).toString()
+            return UUID(deviceID.hashCode().toLong(), serial.hashCode().toLong()).toString();
+        } catch (exception: Exception) {
+            serial = "serial"
+        }
+
+        return UUID(deviceID.hashCode().toLong(), serial.hashCode().toLong()).toString()
+    }
+
     val defaultLang = "ru"
     private var locale: Locale? = null
 
