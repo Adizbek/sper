@@ -3,6 +3,7 @@ package com.github.adizbek.sper.helper
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -20,6 +21,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.*
 import android.text.Html
+import android.text.Spannable
 import android.text.method.LinkMovementMethod
 import android.util.Base64
 import android.util.Base64OutputStream
@@ -27,6 +29,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.blankj.subutil.util.ClipboardUtils
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -41,6 +44,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.lang.Float.parseFloat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -78,8 +82,8 @@ object Helper {
 
     val lang: String
         get() = PreferenceManager.getDefaultSharedPreferences(Sper.getContext()).getString(
-                "language",
-                defaultLang
+            "language",
+            defaultLang
         )
 
     //    public static String urlImage(String src) {
@@ -129,7 +133,7 @@ object Helper {
 
     fun currencyFormatter(`in`: String): String {
         try {
-            return currencyFormatter(java.lang.Float.parseFloat(`in`))
+            return currencyFormatter(parseFloat(`in`))
         } catch (e: Exception) {
             return currencyFormatter(0f)
         }
@@ -196,7 +200,7 @@ object Helper {
 
         val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-                context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
 
         drawer.addDrawerListener(toggle)
@@ -263,7 +267,7 @@ object Helper {
 
             val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
-                    activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
             )
 
             drawer.addDrawerListener(toggle)
@@ -272,11 +276,11 @@ object Helper {
         }
 
         fun setupList(
-                list: RecyclerView,
-                adapter: FastAdapter<*>,
-                context: Context,
-                addDecorator: Boolean = true,
-                decorPadding: Int = 0
+            list: RecyclerView,
+            adapter: FastAdapter<*>,
+            context: Context,
+            addDecorator: Boolean = true,
+            decorPadding: Int = 0
         ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
@@ -301,10 +305,10 @@ object Helper {
 
             val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
                 override fun getItemOffsets(
-                        outRect: Rect,
-                        view: View,
-                        parent: RecyclerView,
-                        state: RecyclerView.State
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
                 ) {
                     val position = parent.getChildAdapterPosition(view);
                     // hide the divider for the last child
@@ -347,9 +351,9 @@ object Helper {
             val builder = AlertDialog.Builder(activity)
 
             builder.setTitle(title)
-                    .setMessage(text)
-                    .setPositiveButton(R.string.ok, null)
-                    .show()
+                .setMessage(text)
+                .setPositiveButton(R.string.ok, null)
+                .show()
 
         }
     }
@@ -456,7 +460,7 @@ object Helper {
         }
 
         fun calculateInSampleSize(
-                options: BitmapFactory.Options, maxSize: Int
+            options: BitmapFactory.Options, maxSize: Int
         ): Int {
 
             // Raw height and width of image
@@ -658,4 +662,12 @@ fun InputStream.toBase64(): String {
 fun String.copyToClipboard() {
     ClipboardUtils.copyText(this)
     ToastUtils.showLong("Copied")
+}
+
+fun String.navigateToUrl() {
+    ActivityUtils.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(this)))
+}
+
+fun now(pattern: String = DateHelper.defaultDateFormat): String {
+    return Calendar.getInstance().time.time.toDateStr(pattern)
 }
