@@ -668,6 +668,10 @@ fun String.navigateToUrl() {
     ActivityUtils.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(this)))
 }
 
+fun String.alertDialog(activity: Activity) {
+    Helper.Dialog.showMessage(activity, this)
+}
+
 fun now(pattern: String = DateHelper.defaultDateFormat): String {
     return Calendar.getInstance().time.time.toDateStr(pattern)
 }
