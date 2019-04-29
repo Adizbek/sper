@@ -2,6 +2,7 @@ package com.github.adizbek.sper.helper;
 
 import com.github.adizbek.sper.net.BasicAuthInterceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import javax.net.ssl.*;
@@ -9,11 +10,11 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
 public class NetHelper {
-    public static OkHttpClient getUnsafeOkHttpClient() {
+    public static OkHttpClient.Builder getUnsafeOkHttpClient() {
         return getUnsafeOkHttpClient(null, null);
     }
 
-    public static OkHttpClient getUnsafeOkHttpClient(String username, String password) {
+    public static OkHttpClient.Builder getUnsafeOkHttpClient(String username, String password) {
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -60,10 +61,11 @@ public class NetHelper {
                 }
             });
 
-            return builder.build();
+            return builder;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
 }

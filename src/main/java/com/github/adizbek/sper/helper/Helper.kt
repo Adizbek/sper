@@ -3,17 +3,18 @@ package com.github.adizbek.sper.helper
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.drawable.InsetDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
@@ -23,14 +24,16 @@ import android.text.Html
 import android.text.Spannable
 import android.text.method.LinkMovementMethod
 import android.util.Base64
+import android.util.Base64OutputStream
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import com.blankj.utilcode.util.ConvertUtils
-import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.subutil.util.ClipboardUtils
+import com.blankj.utilcode.util.*
+import com.github.adizbek.sper.BaseApplication
+import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
 import com.github.adizbek.sper.net.PicassoImageGetter
@@ -40,6 +43,8 @@ import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
+import java.lang.Float.parseFloat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -55,13 +60,30 @@ fun String.md5(): String {
 }
 
 object Helper {
+
+    fun getUniqueID(): String {
+        val deviceID =
+            "35" + (Build.BOARD.length % 10) + (Build.BRAND.length % 10) + (Build.CPU_ABI.length % 10) + (Build.DEVICE.length % 10) + (Build.MANUFACTURER.length % 10) + (Build.MODEL.length % 10) + (Build.PRODUCT.length % 10)
+
+        var serial: String
+
+        try {
+            serial = android.os.Build::class.java.getField("SERIAL").get(null).toString()
+            return UUID(deviceID.hashCode().toLong(), serial.hashCode().toLong()).toString();
+        } catch (exception: Exception) {
+            serial = "serial"
+        }
+
+        return UUID(deviceID.hashCode().toLong(), serial.hashCode().toLong()).toString()
+    }
+
     val defaultLang = "ru"
     private var locale: Locale? = null
 
     val lang: String
         get() = PreferenceManager.getDefaultSharedPreferences(Sper.getContext()).getString(
-                "language",
-                defaultLang
+            "language",
+            defaultLang
         )
 
     //    public static String urlImage(String src) {
@@ -111,7 +133,7 @@ object Helper {
 
     fun currencyFormatter(`in`: String): String {
         try {
-            return currencyFormatter(java.lang.Float.parseFloat(`in`))
+            return currencyFormatter(parseFloat(`in`))
         } catch (e: Exception) {
             return currencyFormatter(0f)
         }
@@ -178,7 +200,7 @@ object Helper {
 
         val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-                context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
 
         drawer.addDrawerListener(toggle)
@@ -245,7 +267,7 @@ object Helper {
 
             val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
-                    activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
             )
 
             drawer.addDrawerListener(toggle)
@@ -254,11 +276,11 @@ object Helper {
         }
 
         fun setupList(
-                list: RecyclerView,
-                adapter: FastAdapter<*>,
-                context: Context,
-                addDecorator: Boolean = true,
-                decorPadding: Int = 0
+            list: RecyclerView,
+            adapter: FastAdapter<*>,
+            context: Context,
+            addDecorator: Boolean = true,
+            decorPadding: Int = 0
         ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
@@ -283,10 +305,10 @@ object Helper {
 
             val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
                 override fun getItemOffsets(
-                        outRect: Rect,
-                        view: View,
-                        parent: RecyclerView,
-                        state: RecyclerView.State
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
                 ) {
                     val position = parent.getChildAdapterPosition(view);
                     // hide the divider for the last child
@@ -330,9 +352,9 @@ object Helper {
                 activity)
 
             builder.setTitle(title)
-                    .setMessage(text)
-                    .setPositiveButton(R.string.ok, null)
-                    .show()
+                .setMessage(text)
+                .setPositiveButton(R.string.ok, null)
+                .show()
 
         }
     }
@@ -439,7 +461,7 @@ object Helper {
         }
 
         fun calculateInSampleSize(
-                options: BitmapFactory.Options, maxSize: Int
+            options: BitmapFactory.Options, maxSize: Int
         ): Int {
 
             // Raw height and width of image
@@ -591,8 +613,70 @@ fun TextView.bindHtml(@StringRes html: Int): TextView {
     return this
 }
 
+fun String.stripHtml(): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY).toString()
+    } else {
+        Html.fromHtml(this).toString()
+    }
+}
+
+fun Uri.getRealPath(ctx: Context): String? {
+    var path: String?
+
+    val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
+    val cursor = ctx.contentResolver.query(this, projection, null, null, null)
+
+    if (cursor == null) {
+        path = this.path
+    } else {
+        cursor.moveToFirst()
+        val columnIndex = cursor.getColumnIndexOrThrow(projection[0])
+        path = cursor.getString(columnIndex)
+        cursor.close()
+    }
+
+    return if (path == null || path.isEmpty()) this.path else path
+}
+
+fun InputStream.toBase64(): String {
+    val buffer = byteArrayOf()
+    var bytesRead = 0
+
+    val output = ByteArrayOutputStream()
+    val output64 = Base64OutputStream(output, Base64.DEFAULT)
+
+    try {
+        while ({ bytesRead = this.read(buffer); bytesRead }() != -1) {
+            output64.write(buffer, 0, bytesRead)
+        }
+
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+
+    output64.close()
+
+    return output.toString()
+}
+
 fun String.toast(){
     ToastUtils.showShort(this)
 }
 
+fun String.copyToClipboard() {
+    ClipboardUtils.copyText(this)
+    ToastUtils.showLong("Copied")
+}
 
+fun String.navigateToUrl() {
+    ActivityUtils.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(this)))
+}
+
+fun String.alertDialog(activity: Activity) {
+    Helper.Dialog.showMessage(activity, this)
+}
+
+fun now(pattern: String = DateHelper.defaultDateFormat): String {
+    return Calendar.getInstance().time.time.toDateStr(pattern)
+}

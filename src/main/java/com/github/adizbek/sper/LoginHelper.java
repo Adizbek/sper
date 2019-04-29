@@ -23,7 +23,7 @@ public class LoginHelper {
     }
 
     public LoginHelper write(String key, String value) {
-        preferences.edit().putString(key, value).apply();
+        preferences.edit().putString(key, value).commit();
         cache.put(key, value);
 
         return this;
@@ -45,7 +45,7 @@ public class LoginHelper {
             cache.remove(key);
         }
 
-        editor.apply();
+        editor.commit();
     }
 
     public static void login(String... params) {
