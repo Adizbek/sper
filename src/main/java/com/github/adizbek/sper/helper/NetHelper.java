@@ -42,7 +42,6 @@ public class NetHelper {
             final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
             builder.connectTimeout(15, TimeUnit.SECONDS)

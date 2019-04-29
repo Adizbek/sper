@@ -84,6 +84,15 @@ fun String.toTimestamp(pattern: String = DateHelper.defaultDateFormat): Long {
     }
 }
 
+fun String.toCalendar(pattern: String = DateHelper.defaultDateFormat):Calendar{
+    val date =  DateHelper.str2Date(this, pattern)
+    val calendar = Calendar.getInstance()
+
+    calendar.time = date
+
+    return calendar
+}
+
 fun String.conv2Date(toPattern: String, fromPattern: String = DateHelper.defaultDateFormat, locale: Locale = Sper.getInstance().locale): String {
     return DateHelper.convertStrDate(this, toPattern, fromPattern, locale)
 }
@@ -114,4 +123,8 @@ fun Calendar.setMonthEndC(): Calendar {
     return (this.clone() as Calendar).apply {
         setMonthEnd()
     }
+}
+
+fun Calendar.toStr(pattern: String = DateHelper.defaultDateFormat): String{
+    return DateHelper.date2Custom(this.time, pattern)
 }

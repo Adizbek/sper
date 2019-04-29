@@ -16,6 +16,7 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        c = this;
         Helper.INSTANCE.loadSavedLang();
     }
 }

@@ -29,6 +29,7 @@ import android.widget.TextView
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.FragmentUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.github.adizbek.sper.BaseApplication
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
@@ -325,7 +326,8 @@ object Helper {
 
         //
         fun showMessage(activity: Activity, title: String, text: String) {
-            val builder = AlertDialog.Builder(activity)
+            val builder = AlertDialog.Builder(
+                activity)
 
             builder.setTitle(title)
                     .setMessage(text)
@@ -587,6 +589,10 @@ fun TextView.bindHtml(@StringRes html: Int): TextView {
     Helper.bindHtml(this, html)
 
     return this
+}
+
+fun String.toast(){
+    ToastUtils.showShort(this)
 }
 
 
