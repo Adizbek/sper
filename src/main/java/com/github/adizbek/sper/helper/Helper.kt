@@ -29,11 +29,11 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.blankj.subutil.util.ClipboardUtils
-import com.blankj.utilcode.util.*
+``import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ConvertUtils
+import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.github.adizbek.sper.BaseApplication
-import com.blankj.utilcode.util.ToastUtils
-import com.blankj.utilcode.util.FragmentUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.github.adizbek.sper.R
 import com.github.adizbek.sper.Sper
 import com.github.adizbek.sper.net.PicassoImageGetter
