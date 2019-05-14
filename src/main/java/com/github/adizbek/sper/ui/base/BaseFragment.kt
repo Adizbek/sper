@@ -1,9 +1,9 @@
 package com.github.adizbek.sper.ui.base
 
 import android.app.ProgressDialog
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import com.github.adizbek.sper.helper.Helper
@@ -55,7 +55,7 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
         return activity as AppCompatActivity
     }
 
-    fun fm(): FragmentManager {
+    fun fm(): androidx.fragment.app.FragmentManager {
         return act().supportFragmentManager
     }
 
@@ -75,6 +75,6 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
     }
 }
 
-fun Fragment.fm(): FragmentManager {
+fun androidx.fragment.app.Fragment.fm(): androidx.fragment.app.FragmentManager {
     return (activity as AppCompatActivity).supportFragmentManager
 }

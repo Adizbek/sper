@@ -1,19 +1,19 @@
 package com.github.adizbek.sper.ui.base
 
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.OnClickListener
 
 interface PaginationView : BaseView {
 
-    fun getList(): RecyclerView
+    fun getList(): androidx.recyclerview.widget.RecyclerView
 
     fun getOnItemClickListener(): OnClickListener<AbstractItem<*, *>>? {
         return null
     }
 
-    fun getRefresh(): SwipeRefreshLayout
+    fun getRefresh(): androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
     fun initList()
 

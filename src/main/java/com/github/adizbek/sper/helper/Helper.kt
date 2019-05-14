@@ -14,12 +14,12 @@ import android.os.Build
 import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.support.annotation.StringRes
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.*
+import androidx.annotation.StringRes
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.*
 import android.text.Html
 import android.text.Spannable
 import android.text.method.LinkMovementMethod
@@ -198,7 +198,7 @@ object Helper {
         context.setSupportActionBar(toolbar)
         toolbar.title = title
 
-        val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
+        val drawer = context.findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
             context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -265,7 +265,7 @@ object Helper {
 
             toolbar.title = title
 
-            val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+            val drawer = activity.findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
                 activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
             )
@@ -276,7 +276,7 @@ object Helper {
         }
 
         fun setupList(
-            list: RecyclerView,
+            list: androidx.recyclerview.widget.RecyclerView,
             adapter: FastAdapter<*>,
             context: Context,
             addDecorator: Boolean = true,
@@ -284,7 +284,7 @@ object Helper {
         ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
-            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            list.layoutManager = LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             list.itemAnimator = DefaultItemAnimator()
 
             list.adapter = adapter
@@ -294,7 +294,7 @@ object Helper {
                 addDecorater(list, decorPadding)
         }
 
-        fun addDecorater(list: RecyclerView, decorPadding: Int) {
+        fun addDecorater(list: androidx.recyclerview.widget.RecyclerView, decorPadding: Int) {
             val context = list.context
             val attrs = intArrayOf(android.R.attr.listDivider)
             val a = context.obtainStyledAttributes(attrs)
@@ -303,12 +303,12 @@ object Helper {
             val insetDivider = InsetDrawable(divider, inset, 0, inset, 0);
             a.recycle()
 
-            val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
+            val itemDecoration = object : DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL) {
                 override fun getItemOffsets(
                     outRect: Rect,
                     view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
+                    parent: androidx.recyclerview.widget.RecyclerView,
+                    state: androidx.recyclerview.widget.RecyclerView.State
                 ) {
                     val position = parent.getChildAdapterPosition(view);
                     // hide the divider for the last child
