@@ -29,7 +29,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.blankj.subutil.util.ClipboardUtils
-``import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.ToastUtils
