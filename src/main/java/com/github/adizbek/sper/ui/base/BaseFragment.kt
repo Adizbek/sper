@@ -1,11 +1,9 @@
 package com.github.adizbek.sper.ui.base
 
 import android.app.ProgressDialog
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.github.adizbek.sper.helper.Helper
 import net.grandcentrix.thirtyinch.TiFragment
 import net.grandcentrix.thirtyinch.TiPresenter

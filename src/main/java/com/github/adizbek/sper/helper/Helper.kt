@@ -14,12 +14,6 @@ import android.os.Build
 import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.provider.MediaStore
-import androidx.annotation.StringRes
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.*
 import android.text.Html
 import android.text.Spannable
 import android.text.method.LinkMovementMethod
@@ -28,6 +22,14 @@ import android.util.Base64OutputStream
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.subutil.util.ClipboardUtils
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ConvertUtils
@@ -284,7 +286,7 @@ object Helper {
         ) {
             list.isNestedScrollingEnabled = false
             list.setHasFixedSize(false)
-            list.layoutManager = LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             list.itemAnimator = DefaultItemAnimator()
 
             list.adapter = adapter

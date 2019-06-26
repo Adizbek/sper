@@ -1,7 +1,5 @@
 package com.github.adizbek.sper.extension
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.FragmentUtils
 import com.github.adizbek.sper.R
 
