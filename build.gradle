@@ -40,11 +40,12 @@ dependencies {
 
     compile 'com.applandeo:material-calendar-view:1.5.1'
 
-    def thirtyinchVersion = '0.9.0'
-    implementation "net.grandcentrix.thirtyinch:thirtyinch:$thirtyinchVersion"
-    implementation "net.grandcentrix.thirtyinch:thirtyinch-rx2:$thirtyinchVersion"
-    implementation "net.grandcentrix.thirtyinch:thirtyinch-logginginterceptor:$thirtyinchVersion"
-    implementation "net.grandcentrix.thirtyinch:thirtyinch-kotlin:$thirtyinchVersion"
+    implementation 'com.github.Adizbek:ThirtyInch:26fc6d2d50'
+//    def thirtyinchVersion = '0.9.0'
+//    implementation "net.grandcentrix.thirtyinch:thirtyinch:$thirtyinchVersion"
+//    implementation "net.grandcentrix.thirtyinch:thirtyinch-rx2:$thirtyinchVersion"
+//    implementation "net.grandcentrix.thirtyinch:thirtyinch-logginginterceptor:$thirtyinchVersion"
+//    implementation "net.grandcentrix.thirtyinch:thirtyinch-kotlin:$thirtyinchVersion"
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
