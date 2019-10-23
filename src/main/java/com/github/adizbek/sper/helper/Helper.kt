@@ -2,6 +2,7 @@ package com.github.adizbek.sper.helper
 
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -121,14 +122,6 @@ object Helper {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
 
         return toolbar
-    }
-
-    fun stringField(str: String): RequestBody {
-        return RequestBody.create(MediaType.parse("text/plain"), str)
-    }
-
-    fun stringField(str: Int): RequestBody {
-        return RequestBody.create(MediaType.parse("text/plain"), str.toString())
     }
 
     fun currencyFormatter(`in`: String): String {
@@ -349,7 +342,8 @@ object Helper {
         //
         fun showMessage(activity: Activity, title: String, text: String) {
             val builder = AlertDialog.Builder(
-                activity)
+                activity
+            )
 
             builder.setTitle(title)
                 .setMessage(text)
@@ -600,6 +594,25 @@ object Helper {
      */
 }
 
+fun Context.provideLoading(): ProgressDialog? {
+    return ProgressDialog.show(
+        this, "",
+        "Илтимос кутинг", true
+    )
+}
+
+fun Context.showLoadingBased(value: Boolean, dialog: ProgressDialog?): ProgressDialog? {
+    if (value) {
+        return this.provideLoading()
+    } else if (!value && dialog != null) {
+        dialog.hide()
+        return null
+    }
+
+    return null
+}
+
+
 fun TextView.bindHtml(html: String): TextView {
     Helper.bindHtml(this, html)
 
@@ -660,7 +673,7 @@ fun InputStream.toBase64(): String {
     return output.toString()
 }
 
-fun String.toast(){
+fun String.toast() {
     ToastUtils.showShort(this)
 }
 
