@@ -87,14 +87,6 @@ object Helper {
             defaultLang
         )
 
-    //    public static String urlImage(String src) {
-    //        return urlImage(src, Application.getHost());
-    //    }
-    //
-    //    public static String urlImage(String src, String host) {
-    //        return String.format("%s/%s", host, src);
-    //    }
-
     fun animateCurrency(to: Float, text: TextView) {
         val floatAnimator: ValueAnimator = ValueAnimator.ofFloat(0f, to)
 
