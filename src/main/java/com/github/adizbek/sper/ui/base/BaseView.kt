@@ -2,7 +2,10 @@ package com.github.adizbek.sper.ui.base
 
 import net.grandcentrix.thirtyinch.TiView
 
-public interface BaseView : TiView {
-    public fun showLoading()
-    public fun hideLoading()
+interface BaseView : TiView {
+    fun showLoading()
+    fun hideLoading()
+
+    fun showError(err: Throwable, msg: String? = null)
+    fun showDialog(msg: String)
 }

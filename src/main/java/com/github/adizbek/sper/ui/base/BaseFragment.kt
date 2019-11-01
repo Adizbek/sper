@@ -7,11 +7,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import com.github.adizbek.sper.helper.Helper
+import com.github.adizbek.sper.helper.toast
 import net.grandcentrix.thirtyinch.TiFragment
 import net.grandcentrix.thirtyinch.TiPresenter
 import net.grandcentrix.thirtyinch.TiView
 
-abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>(), TiView, BaseView {
+abstract class BaseFragment<P : TiPresenter<V>, V : BaseView> : TiFragment<P, V>(), BaseView {
 
     var loadingView: ProgressDialog? = null
 
@@ -28,6 +29,15 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
         return super.onOptionsItemSelected(item)
     }
 
+    override fun showError(err: Throwable, msg: String?) {
+        err.localizedMessage.toast()
+    }
+
+    override fun showDialog(msg: String) {
+        activity?.apply {
+            Helper.Dialog.showMessage(this, msg)
+        }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -38,8 +48,10 @@ abstract class BaseFragment<P : TiPresenter<V>, V : TiView> : TiFragment<P, V>()
     override fun showLoading() {
         if (loadingView != null) return
 
-        loadingView = ProgressDialog.show(context, "",
-                "Загрузка...", true)
+        loadingView = ProgressDialog.show(
+            context, "",
+            "Загрузка...", true
+        )
 
         loadingView?.show()
     }

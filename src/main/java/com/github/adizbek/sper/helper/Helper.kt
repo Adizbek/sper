@@ -145,7 +145,10 @@ object Helper {
         val config = Configuration()
         config.locale = locale
 
-        BaseApplication.c.resources.updateConfiguration(config, BaseApplication.c.resources.displayMetrics)
+        BaseApplication.c.resources.updateConfiguration(
+            config,
+            BaseApplication.c.resources.displayMetrics
+        )
     }
 
     fun bindHtml(tv: TextView, string: String) {
@@ -185,7 +188,11 @@ object Helper {
 
         val drawer = context.findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-            context, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            context,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
 
         drawer.addDrawerListener(toggle)
@@ -252,7 +259,11 @@ object Helper {
 
             val drawer = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
             val toggle = ActionBarDrawerToggle(
-                activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                activity,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
             )
 
             drawer.addDrawerListener(toggle)
@@ -288,22 +299,23 @@ object Helper {
             val insetDivider = InsetDrawable(divider, inset, 0, inset, 0);
             a.recycle()
 
-            val itemDecoration = object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    val position = parent.getChildAdapterPosition(view);
-                    // hide the divider for the last child
-                    if (position == parent.adapter!!.itemCount - 1) {
-                        outRect.setEmpty()
-                    } else {
-                        super.getItemOffsets(outRect, view, parent, state);
+            val itemDecoration =
+                object : DividerItemDecoration(context, DividerItemDecoration.VERTICAL) {
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
+                    ) {
+                        val position = parent.getChildAdapterPosition(view);
+                        // hide the divider for the last child
+                        if (position == parent.adapter!!.itemCount - 1) {
+                            outRect.setEmpty()
+                        } else {
+                            super.getItemOffsets(outRect, view, parent, state);
+                        }
                     }
                 }
-            }
             itemDecoration.setDrawable(insetDivider)
             list.addItemDecoration(itemDecoration)
         }
@@ -684,4 +696,12 @@ fun String.alertDialog(activity: Activity) {
 
 fun now(pattern: String = DateHelper.defaultDateFormat): String {
     return Calendar.getInstance().time.time.toDateStr(pattern)
+}
+
+fun Int.seconds(): Int {
+    return this * 1000
+}
+
+fun Int.minutes(): Int {
+    return this.seconds() * 60
 }
